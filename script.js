@@ -1,36 +1,55 @@
-function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+// Script to handle form submission and generate output dynamically
+document.getElementById('reportForm').addEventListener('submit', function (event) {
+    event.preventDefault();
 
-    let programName = document.getElementById("programName").value;
-    let date = document.getElementById("date").value;
-    let time = document.getElementById("time").value;
-    let location = document.getElementById("location").value;
-    let target = document.getElementById("target").value;
-    let objective = document.getElementById("objective").value;
-    let activity = document.getElementById("activity").value;
-    let strengths = document.getElementById("strengths").value;
-    let weaknesses = document.getElementById("weaknesses").value;
-    let preparedBy = document.getElementById("preparedBy").value;
-    let position = document.getElementById("position").value;
+    // Collect form data
+    const formData = {
+        programName: document.getElementById('programName').value,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        location: document.getElementById('location').value,
+        targetAudience: document.getElementById('targetAudience').value,
+        objectives: document.getElementById('objectives').value,
+        activities: document.getElementById('activities').value,
+        strengths: document.getElementById('strengths').value,
+        weaknesses: document.getElementById('weaknesses').value,
+        preparedBy: document.getElementById('preparedBy').value,
+        position: document.getElementById('position').value
+    };
 
-    doc.text("One Page Report (OPR)", 10, 10);
-    doc.text("Nama Program/Aktiviti: " + programName, 10, 20);
-    doc.text("Tarikh: " + date, 10, 30);
-    doc.text("Masa: " + time, 10, 40);
-    doc.text("Tempat: " + location, 10, 50);
-    doc.text("Sasaran: " + target, 10, 60);
-    doc.text("Objektif: ", 10, 70);
-    doc.text(objective, 10, 80, { maxWidth: 180 });
-    doc.text("Aktiviti: ", 10, 100);
-    doc.text(activity, 10, 110, { maxWidth: 180 });
-    doc.text("Kekuatan: ", 10, 130);
-    doc.text(strengths, 10, 140, { maxWidth: 180 });
-    doc.text("Kelemahan: ", 10, 160);
-    doc.text(weaknesses, 10, 170, { maxWidth: 180 });
+    // Handle image uploads
+    const imageFiles = Array.from(document.getElementById('images').files);
+    const imagePreviews = imageFiles.slice(0, 4).map(file => {
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+            reader.onload = function (e) {
+                resolve(`<img src="${e.target.result}" alt="${file.name}">`);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
 
-    doc.text("Disediakan oleh: " + preparedBy, 10, 190);
-    doc.text("Jawatan: " + position, 10, 200);
+    // Wait for all images to load
+    Promise.all(imagePreviews).then(images => {
+        // Generate output HTML
+        const outputHTML = `
+            <h2>Generated Report</h2>
+            <p><strong>Nama Program/Aktiviti:</strong> ${formData.programName}</p>
+            <p><strong>Tarikh:</strong> ${formData.date}</p>
+            <p><strong>Masa:</strong> ${formData.time}</p>
+            <p><strong>Tempat:</strong> ${formData.location}</p>
+            <p><strong>Sasaran:</strong> ${formData.targetAudience}</p>
+            <p><strong>Objektif:</strong> ${formData.objectives}</p>
+            <p><strong>Aktiviti:</strong> ${formData.activities}</p>
+            <p><strong>Kekuatan:</strong> ${formData.strengths}</p>
+            <p><strong>Kelemahan:</strong> ${formData.weaknesses}</p>
+            <p><strong>Gambar:</strong></p>
+            <div class="image-grid">${images.join('')}</div>
+            <p><strong>Disediakan oleh:</strong> ${formData.preparedBy}</p>
+            <p><strong>Jawatan:</strong> ${formData.position}</p>
+        `;
 
-    doc.save("one_page_report.pdf");
-}
+        // Display output
+        document.getElementById('output').innerHTML = outputHTML;
+    });
+});
