@@ -1,64 +1,86 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
-.container {
-    width: 50%;
-    margin: auto;
-    background: white;
+header {
+    text-align: center;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #007bff;
+    color: white;
 }
 
-h2 {
-    text-align: center;
+main {
+    max-width: 794px; /* A4 width in pixels */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.creator {
-    text-align: center;
-    font-style: italic;
-    color: #555;
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 label {
-    display: block;
-    margin-top: 10px;
     font-weight: bold;
 }
 
-input, textarea {
+input, textarea, button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
+}
+
+/* Image Grid */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.image-grid img {
+    width: 100%; /* Fit within the grid cell */
+    height: 150px; /* Fixed height for consistency */
+    object-fit: cover; /* Ensures images are resized proportionally */
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-textarea {
-    height: 80px;
-}
-
-input[type="file"] {
-    width: auto;
-}
-
-button {
-    display: block;
-    width: 100%;
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin-top: 15px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-button:hover {
-    background: #218838;
+/* Ensure the output fits within A4 dimensions */
+#output {
+    max-width: 794px; /* A4 width */
+    margin: 0 auto;
+    padding: 20px;
+    font-size: 14px; /* Smaller font size for compact layout */
+    line-height: 1.5;
 }
