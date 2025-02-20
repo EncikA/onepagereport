@@ -5,54 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>One Page Report Generator</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2>One Page Report Generator</h2>
-        <p class="creator">by Mohamad Adri bin Maili</p>
+    <header>
+        <h1>One Page Report Generator</h1>
+        <p>by Mohamad Adri bin Maili</p>
+    </header>
 
-        <label>Nama Program/Aktiviti:</label>
-        <input type="text" id="programName">
+    <main>
+        <form id="reportForm">
+            <label for="programName">Nama Program/Aktiviti:</label>
+            <input type="text" id="programName" name="programName" required>
 
-        <label>Tarikh:</label>
-        <input type="date" id="date">
+            <label for="date">Tarikh:</label>
+            <input type="date" id="date" name="date" required>
 
-        <label>Masa:</label>
-        <input type="time" id="time">
+            <label for="time">Masa:</label>
+            <input type="time" id="time" name="time" required>
 
-        <label>Tempat:</label>
-        <input type="text" id="location">
+            <label for="location">Tempat:</label>
+            <input type="text" id="location" name="location" required>
 
-        <label>Sasaran:</label>
-        <input type="text" id="target">
+            <label for="targetAudience">Sasaran:</label>
+            <input type="text" id="targetAudience" name="targetAudience" required>
 
-        <label>Objektif:</label>
-        <textarea id="objective"></textarea>
+            <label for="objectives">Objektif:</label>
+            <textarea id="objectives" name="objectives" rows="3" required></textarea>
 
-        <label>Aktiviti:</label>
-        <textarea id="activity"></textarea>
+            <label for="activities">Aktiviti:</label>
+            <textarea id="activities" name="activities" rows="3" required></textarea>
 
-        <label>Kekuatan:</label>
-        <textarea id="strengths"></textarea>
+            <label for="strengths">Kekuatan:</label>
+            <textarea id="strengths" name="strengths" rows="3" required></textarea>
 
-        <label>Kelemahan:</label>
-        <textarea id="weaknesses"></textarea>
+            <label for="weaknesses">Kelemahan:</label>
+            <textarea id="weaknesses" name="weaknesses" rows="3" required></textarea>
 
-        <label>Upload Gambar (Maks 4):</label>
-        <input type="file" id="image1" accept="image/*">
-        <input type="file" id="image2" accept="image/*">
-        <input type="file" id="image3" accept="image/*">
-        <input type="file" id="image4" accept="image/*">
+            <label for="images">Upload Gambar (Maks 4):</label>
+            <input type="file" id="images" name="images" accept="image/*" multiple required>
 
-        <label>Disediakan oleh:</label>
-        <input type="text" id="preparedBy">
+            <label for="preparedBy">Disediakan oleh:</label>
+            <input type="text" id="preparedBy" name="preparedBy" required>
 
-        <label>Jawatan:</label>
-        <input type="text" id="position">
+            <label for="position">Jawatan:</label>
+            <input type="text" id="position" name="position" required>
 
-        <button onclick="generatePDF()">Jana OPR</button>
-    </div>
+            <button type="submit">Jana OPR</button>
+        </form>
+
+        <div id="output"></div>
+    </main>
+
+    <footer>
+        <p>&copy; SK Stalon One Page Report Generator</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
