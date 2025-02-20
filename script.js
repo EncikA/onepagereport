@@ -1,87 +1,84 @@
-// Function to reformat date from yyyy-mm-dd to dd/mm/yyyy
-function formatDate(inputDate) {
-    const dateParts = inputDate.split('-'); // Split the date into parts
-    if (dateParts.length === 3) {
-        const year = dateParts[0];
-        const month = dateParts[1];
-        const day = dateParts[2];
-        return `${day}/${month}/${year}`; // Reformat to dd/mm/yyyy
+document.addEventListener("DOMContentLoaded", function () {
+    const reportForm = document.getElementById("reportForm");
+    const outputDiv = document.getElementById("output");
+    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+    const imageInput = document.getElementById("images");
+    const imageGrid = document.createElement("div");
+    imageGrid.className = "image-grid";
+    let uploadedImages = [];
+
+    // Format Date to DD/MM/YYYY
+    function formatDate(date) {
+        const [year, month, day] = date.split("-");
+        return `${day}/${month}/${year}`;
     }
-    return inputDate; // Return the original date if formatting fails
-}
 
-// Script to handle form submission and generate output dynamically
-document.getElementById('reportForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    // Collect form data
-    const formData = {
-        programName: document.getElementById('programName').value,
-        date: formatDate(document.getElementById('date').value), // Format the date
-        time: document.getElementById('time').value,
-        location: document.getElementById('location').value,
-        targetAudience: document.getElementById('targetAudience').value,
-        objectives: document.getElementById('objectives').value,
-        activities: document.getElementById('activities').value,
-        strengths: document.getElementById('strengths').value,
-        weaknesses: document.getElementById('weaknesses').value,
-        preparedBy: document.getElementById('preparedBy').value,
-        position: document.getElementById('position').value
-    };
-
-    // Handle image uploads
-    const imageFiles = Array.from(document.getElementById('images').files);
-    const imagePreviews = imageFiles.slice(0, 4).map(file => {
-        const reader = new FileReader();
-        return new Promise((resolve) => {
+    // Handle Image Upload Preview
+    imageInput.addEventListener("change", function () {
+        uploadedImages = [];
+        imageGrid.innerHTML = "";
+        if (this.files.length > 4) {
+            alert("You can upload a maximum of 4 images.");
+            this.value = "";
+            return;
+        }
+        Array.from(this.files).forEach(file => {
+            const reader = new FileReader();
             reader.onload = function (e) {
-                resolve(`<img src="${e.target.result}" alt="${file.name}">`);
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                uploadedImages.push(img.src);
+                imageGrid.appendChild(img);
             };
             reader.readAsDataURL(file);
         });
     });
 
-    // Wait for all images to load
-    Promise.all(imagePreviews).then(images => {
-        // Generate output HTML
-        const outputHTML = `
-            <h2>Generated Report</h2>
-            <p><strong>Nama Program/Aktiviti:</strong> ${formData.programName}</p>
-            <p><strong>Tarikh:</strong> ${formData.date}</p>
-            <p><strong>Masa:</strong> ${formData.time}</p>
-            <p><strong>Tempat:</strong> ${formData.location}</p>
-            <p><strong>Sasaran:</strong> ${formData.targetAudience}</p>
-            <p><strong>Objektif:</strong> ${formData.objectives}</p>
-            <p><strong>Aktiviti:</strong> ${formData.activities}</p>
-            <p><strong>Kekuatan:</strong> ${formData.strengths}</p>
-            <p><strong>Kelemahan:</strong> ${formData.weaknesses}</p>
-            <p><strong>Gambar:</strong></p>
-            <div class="image-grid">${images.join('')}</div>
-            <p><strong>Disediakan oleh:</strong> ${formData.preparedBy}</p>
-            <p><strong>Jawatan:</strong> ${formData.position}</p>
+    reportForm.appendChild(imageGrid);
+
+    // Generate Report
+    reportForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const formData = new FormData(reportForm);
+
+        outputDiv.innerHTML = `
+            <h2>${formData.get("programName")}</h2>
+            <p><strong>Tarikh:</strong> ${formatDate(formData.get("date"))}</p>
+            <p><strong>Masa:</strong> ${formData.get("time")}</p>
+            <p><strong>Tempat:</strong> ${formData.get("location")}</p>
+            <p><strong>Sasaran:</strong> ${formData.get("targetAudience")}</p>
+            <p><strong>Objektif:</strong> ${formData.get("objectives")}</p>
+            <p><strong>Aktiviti:</strong> ${formData.get("activities")}</p>
+            <p><strong>Kekuatan:</strong> ${formData.get("strengths")}</p>
+            <p><strong>Kelemahan:</strong> ${formData.get("weaknesses")}</p>
+            <p><strong>Disediakan oleh:</strong> ${formData.get("preparedBy")}</p>
+            <p><strong>Jawatan:</strong> ${formData.get("position")}</p>
         `;
 
-        // Display output
-        document.getElementById('output').innerHTML = outputHTML;
+        // Append Image Grid to Output
+        const reportImages = document.createElement("div");
+        reportImages.className = "image-grid";
+        uploadedImages.forEach(src => {
+            const img = document.createElement("img");
+            img.src = src;
+            reportImages.appendChild(img);
+        });
+        outputDiv.appendChild(reportImages);
 
-        // Show the "Download PDF" button
-        document.getElementById('downloadPdfBtn').style.display = 'block';
+        downloadPdfBtn.style.display = "block";
     });
-});
 
-// Add functionality to download the report as a PDF
-document.getElementById('downloadPdfBtn').addEventListener('click', function () {
-    const element = document.getElementById('output');
-
-    // Options for the PDF generation
-    const options = {
-        margin: 10,
-        filename: 'OnePageReport.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    // Generate the PDF
-    html2pdf().set(options).from(element).save();
+    // Download as PDF
+    downloadPdfBtn.addEventListener("click", function () {
+        html2pdf()
+            .from(outputDiv)
+            .set({
+                margin: 10,
+                filename: "OnePageReport.pdf",
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+            })
+            .save();
+    });
 });
