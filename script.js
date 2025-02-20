@@ -51,5 +51,25 @@ document.getElementById('reportForm').addEventListener('submit', function (event
 
         // Display output
         document.getElementById('output').innerHTML = outputHTML;
+
+        // Show the "Download PDF" button
+        document.getElementById('downloadPdfBtn').style.display = 'block';
     });
+});
+
+// Add functionality to download the report as a PDF
+document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+    const element = document.getElementById('output');
+
+    // Options for the PDF generation
+    const options = {
+        margin: 10,
+        filename: 'OnePageReport.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    // Generate the PDF
+    html2pdf().set(options).from(element).save();
 });
