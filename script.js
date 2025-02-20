@@ -1,3 +1,15 @@
+// Function to reformat date from yyyy-mm-dd to dd/mm/yyyy
+function formatDate(inputDate) {
+    const dateParts = inputDate.split('-'); // Split the date into parts
+    if (dateParts.length === 3) {
+        const year = dateParts[0];
+        const month = dateParts[1];
+        const day = dateParts[2];
+        return `${day}/${month}/${year}`; // Reformat to dd/mm/yyyy
+    }
+    return inputDate; // Return the original date if formatting fails
+}
+
 // Script to handle form submission and generate output dynamically
 document.getElementById('reportForm').addEventListener('submit', function (event) {
     event.preventDefault();
@@ -5,7 +17,7 @@ document.getElementById('reportForm').addEventListener('submit', function (event
     // Collect form data
     const formData = {
         programName: document.getElementById('programName').value,
-        date: document.getElementById('date').value,
+        date: formatDate(document.getElementById('date').value), // Format the date
         time: document.getElementById('time').value,
         location: document.getElementById('location').value,
         targetAudience: document.getElementById('targetAudience').value,
